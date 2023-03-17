@@ -53,6 +53,7 @@ we were assigned to implement those self balancing BSTs and build - using them -
 
 ## Designed & Implemented By
 - ***[Mariam Aziz](https://github.com/MariamAziz0)***
+- ***[George Seleim](https://github.com/George-Seleim)***
 - ***[Islam Yasser](https://github.com/Islam0143)***
 - ***[Mkario Michel](https://github.com/Mkario)***
 - ***[George Beshay](https://github.com/GeorgeBeshay)***
