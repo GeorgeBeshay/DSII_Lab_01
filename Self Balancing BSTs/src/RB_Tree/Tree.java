@@ -5,9 +5,8 @@ import java.util.*;
 public interface Tree<T extends Comparable<T>> {
     Tree<T> insert(T data);
     void delete(T data);
-    void traverse();
+    ArrayList<RB_Node<T>> traverse();
     boolean search(T data);
-    List<T> toList();
     T getMax();
     T getMin();
     boolean isEmpty();
