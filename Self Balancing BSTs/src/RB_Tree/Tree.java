@@ -7,7 +7,7 @@ public interface Tree<T extends Comparable<T>> {
     void delete(T data);
     ArrayList<RB_Node<T>> traverse();
     boolean search(T data);
-    T getMax();
+    T getMax(RB_Node<T> node);
     T getMin();
     boolean isEmpty();
     long getSize();
