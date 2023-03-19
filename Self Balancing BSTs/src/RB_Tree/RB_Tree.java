@@ -159,7 +159,7 @@ public class RB_Tree<T extends Comparable<T>> implements Tree<T> {
         }
         else {
             RB_Node<T> sibling = (toBeDeleted.isLeftChild()? toBeDeleted.getParent().getRightChild(): toBeDeleted.getParent().getLeftChild());
-            handleDoubleBlack(child, sibling);
+            handleDoubleBlack(toBeDeleted, sibling);
         }
         root.setRed(false);
     }
@@ -201,8 +201,31 @@ public class RB_Tree<T extends Comparable<T>> implements Tree<T> {
             }
             else {
                 // LL or LR
-
+                if(sibling.getLeftChild() != null && sibling.getLeftChild().isRed()){
+                    // LL
+                    handleRotationDeleteRecoloring(sibling.getParent(), sibling, sibling.getLeftChild(), sibling.getRightChild());
+                    rightRotate(sibling.getParent());
+                } else {
+                    // LR
+                    leftRotate(sibling);
+                    sibling.flipColor();
+                    if(sibling.getLeftChild() != null){
+                        sibling.getLeftChild().flipColor();
+                    }
+                    sibling = sibling.getParent();
+                    handleRotationDeleteRecoloring(sibling.getParent(), sibling, sibling.getLeftChild(), sibling.getRightChild());
+                    rightRotate(sibling.getParent());
+                }
             }
+        } else {
+            // sibling is red
+            sibling.flipColor();
+            sibling.getParent().flipColor();
+            if(sibling.isLeftChild())
+                rightRotate(sibling.getParent());
+            else
+                leftRotate(sibling.getParent());
+            handleDoubleBlack(node, (node.isLeftChild() ? node.getParent().getRightChild() : node.getParent().getLeftChild()));
         }
     }
 

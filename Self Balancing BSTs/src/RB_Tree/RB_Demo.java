@@ -11,26 +11,20 @@ public class RB_Demo {
         tree.delete(3);
         tree.insert(20);
         tree.delete(5);
+        tree.insert(18);
+        tree.delete(10);
+        tree.insert(10);
+        tree.delete(20);
+        tree.insert(13);
+        tree.delete(18);
+        tree.insert(14);
+        tree.insert(16);
+        tree.insert(17);
+        tree.delete(17);
+        tree.delete(10);
         List<RB_Node<Integer>> nodes = tree.traverse();
-
         System.out.println("Root is :" + tree.getRoot().getData());
         for(RB_Node<Integer> node : nodes)
             System.out.println(node.getData() + " isRed: " + node.isRed());
-        System.out.println("--------------------------------------------");
-
-//        tree.insert(20);
-//        List<RB_Node<Integer>> nodes2 = tree.traverse();
-//        System.out.println("Rott is :" + tree.getRoot().getData());
-//        for(RB_Node<Integer> node : nodes2)
-//            System.out.println(node.getData() + " isRed: " + node.isRed());
-//        tree.delete(8);
-//        tree.delete(12);
-//        tree.delete(19);
-//        tree.delete(31);
-//        tree.delete(41);
-//        System.out.println("--------------------------------------------");
-//        List<RB_Node<Integer>> nodes_2 = tree.traverse();
-//        for(RB_Node<Integer> node : nodes_2)
-//            System.out.println(node.getData() + " isRed: " + node.isRed());
     }
 }
