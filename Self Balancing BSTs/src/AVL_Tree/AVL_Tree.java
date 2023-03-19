@@ -5,7 +5,7 @@ import RB_Tree.Tree;
 
 import java.util.ArrayList;
 
-public class AVL_Tree<T extends Comparable<T>> implements Tree<T> {
+public class AVL_Tree<T extends Comparable<T>>  {
     private AVL_Node<T> root;
     private int size;
 
