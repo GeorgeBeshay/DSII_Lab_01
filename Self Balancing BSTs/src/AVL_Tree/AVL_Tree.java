@@ -40,13 +40,13 @@ public class AVL_Tree<T extends Comparable<T>> implements Tree<T> {
         return null;
     }
 
-    private void traverseInOrder(AVL_Node<T> node) {
-        if(node != null) {
-            traverseInOrder(node.left);
-            System.out.print(node.data+" ");
-            traverseInOrder(node.right);
-        }
-    }
+//    private void traverseInOrder(AVL_Node<T> node) {
+//        if(node != null) {
+//            traverseInOrder(node.left);
+//            System.out.print(node.data+" ");
+//            traverseInOrder(node.right);
+//        }
+//    }
 
 
     private AVL_Node<T> insert(T data, AVL_Node<T> root) {
