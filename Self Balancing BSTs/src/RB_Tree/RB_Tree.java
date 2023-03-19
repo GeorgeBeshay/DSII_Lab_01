@@ -128,7 +128,7 @@ public class RB_Tree<T extends Comparable<T>> implements Tree<T> {
             node.setRightChild(delete(data, node.getRightChild()));
         }
         else {
-
+            this.size--;
             if(node.getLeftChild() == null && node.getRightChild() == null){
                 handleDelete(node, node.getRightChild());
                 return node.getRightChild();
@@ -259,8 +259,22 @@ public class RB_Tree<T extends Comparable<T>> implements Tree<T> {
 
     @Override
     public boolean search(T data) {
+        return search_recursion(root, data);
+    }
+
+    private boolean search_recursion(RB_Node<T> node, T data){
+        if(node == null)
+            return false;
+        if(node.getData().compareTo(data) < 0)
+            search_recursion(node.getLeftChild(), data);
+        else if(node.getData().compareTo(data) > 0)
+            search_recursion(node.getRightChild(), data);
+        else
+            return true;
         return false;
     }
+
+
 
     @Override
     public T getMax(RB_Node<T> node) {
@@ -278,7 +292,7 @@ public class RB_Tree<T extends Comparable<T>> implements Tree<T> {
 
     @Override
     public boolean isEmpty() {
-        return false;
+        return (this.size == 0);
     }
 
     @Override
