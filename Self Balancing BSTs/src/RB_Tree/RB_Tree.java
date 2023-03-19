@@ -60,7 +60,7 @@ public class RB_Tree<T extends Comparable<T>> implements Tree<T> {
         leftRotate(grandParent);
 //        recolorAndRotate();
     }
-    public void rightRotate(RB_Node<T> node){
+    public void rightRotate(RB_Node<T> node) {
         RB_Node<T> leftChild = node.getLeftChild();
         node.setLeftChild(leftChild.getRightChild());
         if(leftChild.getRightChild() != null)
