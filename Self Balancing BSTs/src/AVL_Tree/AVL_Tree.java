@@ -1,20 +1,44 @@
 package AVL_Tree;
-public class AVL_Tree<T extends Comparable<T>> {
+
+import RB_Tree.RB_Node;
+import RB_Tree.Tree;
+
+import java.util.ArrayList;
+
+public class AVL_Tree<T extends Comparable<T>> implements Tree<T> {
     private AVL_Node<T> root;
     private int size;
 
-    public AVL_Tree() { root = null; size = 0; }
+    public AVL_Tree() {
+        root = null;
+        size = 0;
+    }
 
 
-    public void insert (T data) { root = insert(data , root); }
+    public AVL_Tree<T> insert (T data) {
+        root = insert(data , root);
+        return this;
+    }
     public void delete(T data) {
         root = delete(data , root);
     }
-    public AVL_Node search(T data) { return search(data, root); }
-    public int size() { return size; }
-    public int getHeight() {return root.height; }
+    public boolean search(T data) {
+        if(search(data, root) != null)
+            return true;
+        return false;
+    }
+
+
+    public long getSize() { return size; }
+    public long getHeight() {return root.height; }
     public AVL_Node getRootNode() { return root; }
-    public void traverse() { traverseInOrder(root); }
+    //public void traverse() { traverseInOrder(root); }
+
+    public boolean isEmpty() { return root == null; }
+
+    public ArrayList<RB_Node<T>> traverse(){
+        return null;
+    }
 
     private void traverseInOrder(AVL_Node<T> node) {
         if(node != null) {
@@ -97,6 +121,19 @@ public class AVL_Tree<T extends Comparable<T>> {
         if (predecessor_Node.right != null)
             return getMax(predecessor_Node.right);
         return predecessor_Node.data;
+    }
+
+    private T getMin(AVL_Node<T> successor_Node) {
+        if (successor_Node.left != null)
+            return getMin(successor_Node.left);
+        return successor_Node.data;
+    }
+    public T getMax() {
+        return getMax(root);
+    }
+
+    public T getMin() {
+        return getMin(root);
     }
 
     private AVL_Node<T> doSuitableRotation(AVL_Node node) {

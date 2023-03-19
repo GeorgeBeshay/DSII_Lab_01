@@ -23,9 +23,14 @@ public class AVL_Demo {
         myTree.insert(16);
         System.out.println(myTree.getRootNode().data);
         System.out.println(myTree.getHeight());
+        System.out.println(myTree.getSize());
+        System.out.println(myTree.search(8));
         myTree.delete(8);
-        System.out.println(myTree.getHeight());
         System.out.println(myTree.getRootNode().data);
+        System.out.println(myTree.getHeight());
+        System.out.println(myTree.getSize());
+        System.out.println(myTree.search(8));
+
         //myTree.traverse();
     }
 }
