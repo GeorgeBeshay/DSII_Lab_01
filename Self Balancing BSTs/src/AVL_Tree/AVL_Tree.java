@@ -1,11 +1,14 @@
 package AVL_Tree;
 
+import Abstractions.Super_Tree;
 import RB_Tree.RB_Node;
 import RB_Tree.Tree;
+import Services.Concrete_FS;
 
 import java.util.ArrayList;
+import java.util.List;
 
-public class AVL_Tree<T extends Comparable<T>>  {
+public class AVL_Tree<T extends Comparable<T>>  implements Super_Tree<T> {
     private AVL_Node<T> root;
     private int size;
 
@@ -13,40 +16,85 @@ public class AVL_Tree<T extends Comparable<T>>  {
         root = null;
         size = 0;
     }
-
-
-    public AVL_Tree<T> insert (T data) {
+    @Override
+    public boolean insert (T data) {
+        int lastSize = size;
         root = insert(data , root);
-        return this;
+        if(lastSize != size)
+            return true;
+        return false;
     }
-    public void delete(T data) {
+
+    @Override
+    public boolean delete(T data) {
+        int lastSize = size;
         root = delete(data , root);
+        if(lastSize != size)
+            return true;
+        return false;
     }
+
+    @Override
     public boolean search(T data) {
         if(search(data, root) != null)
             return true;
         return false;
     }
 
-
+    @Override
     public long getSize() { return size; }
-    public long getHeight() {return root.height; }
+    @Override
+    public long getHeight() {
+        if(root == null) return -1;
+        return root.height;
+    }
+
+    @Override
+    public long batchInsert(String fileName) {
+        int counter = 0;
+        fileName += ".txt";
+        Concrete_FS concrete = new Concrete_FS();
+        List<T> data = concrete.importData(fileName);
+        for(T item : data)
+            if(insert(item))
+                counter++;
+        System.out.println("inserted elements count is "+ counter);
+        System.out.println("Already existing elements are "+(data.size() - counter));
+        return counter;
+    }
+
+    @Override
+    public long batchDelete(String fileName) {
+        int counter = 0;
+        fileName += ".txt";
+        Concrete_FS concrete = new Concrete_FS();
+        List<T> data = concrete.importData(fileName);
+        //System.out.println(delete(data.size()));
+        for(T item : data) {
+            if(delete(item))
+                counter++;
+        }
+        System.out.println("deleted elements count is " + counter);
+        System.out.println("non existing elements are " + (data.size() - counter));
+        return counter;
+    }
+
     public AVL_Node getRootNode() { return root; }
-    //public void traverse() { traverseInOrder(root); }
+    public void traverse() {
+        traverseInOrder(root);
+        System.out.println();
+    }
 
     public boolean isEmpty() { return root == null; }
 
-    public ArrayList<RB_Node<T>> traverse(){
-        return null;
-    }
 
-//    private void traverseInOrder(AVL_Node<T> node) {
-//        if(node != null) {
-//            traverseInOrder(node.left);
-//            System.out.print(node.data+" ");
-//            traverseInOrder(node.right);
-//        }
-//    }
+    private void traverseInOrder(AVL_Node<T> node) {
+        if(node != null) {
+            traverseInOrder(node.left);
+            System.out.print(node.data+" ");
+            traverseInOrder(node.right);
+        }
+    }
 
 
     private AVL_Node<T> insert(T data, AVL_Node<T> root) {
@@ -75,13 +123,33 @@ public class AVL_Tree<T extends Comparable<T>>  {
             }
         }
         else {
-            System.out.println("Node already exists");
+            System.out.println("Node " + data + " already exists");
             return root;
         }
         updateHeight(root);
         updateBalanceFactor(root);
         return doSuitableRotation(root);
     }
+
+    /*private AVL_Node<T> insert(T data, AVL_Node<T>node) {
+        if(node == null) {
+            size++;
+            return new AVL_Node<T>(data);
+        }
+        if(data.compareTo(node.data) < 0) {               // go left
+            node.left = insert(data, node.left);
+        }
+        else if(data.compareTo(node.data) > 0) {     // go right
+            node.right = insert(data, node.right);
+        }
+        else {
+            return null;
+        }
+        updateHeight(node);
+        updateBalanceFactor(node);
+        return doSuitableRotation(node);
+    }*/
+
 
     private AVL_Node<T> delete(T data , AVL_Node<T> root) {
         if(root == null) {
@@ -93,13 +161,13 @@ public class AVL_Tree<T extends Comparable<T>>  {
         else if (data.compareTo(root.data) > 0)     // go right
             root.right = delete(data, root.right);
         else {                                          // it's the exact node
+            size--;
             if (root.left == null)              // Non or Single child
                 return root.right;
             else if(root.right == null )
                 return root.left;
             root.data = getMax(root.left);      // two children
             root.left = delete(root.data , root.left);
-            size--;
         }
         updateHeight(root);
         updateBalanceFactor(root);

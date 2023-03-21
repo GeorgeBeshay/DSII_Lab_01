@@ -5,7 +5,7 @@ import java.io.*;
 
 public class Concrete_FS <T extends String> implements File_Scanner_IF<T>{
     @Override
-    public List<T> importData(String filePath){
+    public List<T> importData(String filePath) {
         filePath = System.getProperty("user.dir").concat("/../Words_Generator/IO/").concat(filePath);
         ArrayList<T> data = new ArrayList<>();
         File file = new File(filePath);
