@@ -1,11 +1,16 @@
 package RB_Tree;
 
-import java.util.ArrayList;
-import java.util.List;
+import Abstractions.Super_Tree;
+import Services.Concrete_FS;
+import Services.File_Scanner_IF;
 
-public class RB_Tree<T extends Comparable<T>> implements Tree<T> {
+import java.util.*;
+
+public class RB_Tree<T extends Comparable<T>> implements Super_Tree<T> {
+
     private RB_Node<T> root;
     private long size;
+
     public RB_Tree(){
         this.root = null;
         this.size = 0;
@@ -16,12 +21,14 @@ public class RB_Tree<T extends Comparable<T>> implements Tree<T> {
     }
 
     @Override
-    public RB_Tree<T> insert(T data) {
+    public boolean insert(T data) {
         RB_Node<T> nodeToBeInserted = new RB_Node<>(data);
+        long tempSize = this.size;
         root = insert(root, nodeToBeInserted);
         recolorAndRotate(nodeToBeInserted);
-        return this;
+        return (tempSize != this.size);
     }
+
     public void recolorAndRotate(RB_Node<T> node){
         RB_Node<T> parent = node.getParent();
         if(parent != null && parent != root && parent.isRed()){
@@ -40,6 +47,7 @@ public class RB_Tree<T extends Comparable<T>> implements Tree<T> {
         }
         root.setRed(false);
     }
+
     public void handleLeftSituation(RB_Node<T> node, RB_Node<T> parent, RB_Node<T> grandParent){
         if(!node.isLeftChild()){
             leftRotate(parent);
@@ -50,6 +58,7 @@ public class RB_Tree<T extends Comparable<T>> implements Tree<T> {
         rightRotate(grandParent);
 //        recolorAndRotate(!node.isLeftChild() ? node : parent);
     }
+
     public void handleRightSituation(RB_Node<T> node, RB_Node<T> parent, RB_Node<T> grandParent){
         if(node.isLeftChild()){
             rightRotate(parent);
@@ -60,6 +69,7 @@ public class RB_Tree<T extends Comparable<T>> implements Tree<T> {
         leftRotate(grandParent);
 //        recolorAndRotate();
     }
+
     public void rightRotate(RB_Node<T> node) {
         RB_Node<T> leftChild = node.getLeftChild();
         node.setLeftChild(leftChild.getRightChild());
@@ -70,6 +80,7 @@ public class RB_Tree<T extends Comparable<T>> implements Tree<T> {
         changeParent(leftChild, node);
         node.setParent(leftChild);
     }
+
     public void leftRotate(RB_Node<T> node){
         RB_Node<T> rightChild = node.getRightChild();
         node.setRightChild(rightChild.getLeftChild());
@@ -80,6 +91,7 @@ public class RB_Tree<T extends Comparable<T>> implements Tree<T> {
         changeParent(rightChild, node);
         node.setParent(rightChild);
     }
+
     public void changeParent(RB_Node<T> node, RB_Node<T> old){
         if(old.getParent() != null) {
             if (old.isLeftChild())
@@ -90,12 +102,14 @@ public class RB_Tree<T extends Comparable<T>> implements Tree<T> {
             root = node;
         }
     }
+
     public void handleRecoloring(RB_Node<T> parent, RB_Node<T> uncle, RB_Node<T> grandParent){
         uncle.flipColor();
         parent.flipColor();
         grandParent.flipColor();
         recolorAndRotate(grandParent);
     }
+
     public RB_Node<T> insert(RB_Node<T> node, RB_Node<T> nodeToBeInserted){
         if(node == null) {
             size++;
@@ -113,8 +127,10 @@ public class RB_Tree<T extends Comparable<T>> implements Tree<T> {
 
 
     @Override
-    public void delete(T data) {
+    public boolean delete(T data) {
+        long tempSize = this.size;
         delete(data, root);
+        return tempSize != this.size;
     }
 
     public RB_Node<T> delete(T data, RB_Node<T> node){
@@ -144,7 +160,7 @@ public class RB_Tree<T extends Comparable<T>> implements Tree<T> {
                 return node.getLeftChild();
             }
 
-            node.setData(getMax(node.getLeftChild()));
+            node.setData(getMax_recursion(node.getLeftChild()));
             node.setLeftChild(delete(node.getData(), node.getLeftChild()));
         }
         return node;
@@ -243,10 +259,17 @@ public class RB_Tree<T extends Comparable<T>> implements Tree<T> {
     }
 
     @Override
-    public ArrayList<RB_Node<T>> traverse() {
-        ArrayList<RB_Node<T>> nodes = new ArrayList<>();
-        traverseInOrder(root, nodes);
-        return nodes;
+    public void traverse(){
+        ArrayList<RB_Node<T>> sortedNodes = this.convert_to_list();
+        for(RB_Node<T> node : sortedNodes)
+            System.out.print(node.getData() + ", ");
+        System.out.println();
+    }
+
+    public ArrayList<RB_Node<T>> convert_to_list() {
+        ArrayList<RB_Node<T>> sortedNodes = new ArrayList<>();
+        traverseInOrder(root, sortedNodes);
+        return sortedNodes;
     }
 
     public void traverseInOrder(RB_Node<T> node, ArrayList<RB_Node<T>> nodes){
@@ -274,20 +297,30 @@ public class RB_Tree<T extends Comparable<T>> implements Tree<T> {
         return false;
     }
 
-
-
     @Override
-    public T getMax(RB_Node<T> node) {
-        if(node.getRightChild() != null) {
-            return getMax(node.getRightChild());
-        }
-        return node.getData();
-
+    public T getMax(){
+        return getMax_recursion(this.root);
     }
 
     @Override
     public T getMin() {
-        return null;
+        return getMin_recursion(this.root);
+    }
+
+    public T getMax_recursion(RB_Node<T> node) {
+        if(node == null)
+            return null;
+        if(node.getRightChild() != null)
+            return getMax_recursion(node.getRightChild());
+        return node.getData();
+    }
+
+    public T getMin_recursion(RB_Node<T> node){
+        if(node == null)
+            return null;
+        if(node.getLeftChild() != null)
+            return getMin_recursion(node.getLeftChild());
+        return node.getData();
     }
 
     @Override
@@ -303,5 +336,38 @@ public class RB_Tree<T extends Comparable<T>> implements Tree<T> {
     @Override
     public long getHeight() {
         return 0;
+    }
+
+    @Override
+    public long batchInsert(String filePath) {
+        File_Scanner_IF<T> dataScanner = new Concrete_FS<>();
+        List<T> dataToInsert = dataScanner.importData(filePath);
+        long tempSize = this.size;
+        for(T data : dataToInsert)
+            this.insert(data);
+        return this.size - tempSize;
+    }
+
+    @Override
+    public long batchDelete(String filePath) {
+        File_Scanner_IF<T> dataScanner = new Concrete_FS<>();
+        List<T> dataToDelete = dataScanner.importData(filePath);
+        long tempSize = this.size;
+        for(T data : dataToDelete)
+            this.delete(data);
+        return this.size - tempSize;
+    }
+
+    @Override
+    public void export(String path){
+        File_Scanner_IF<T> dataScanner = new Concrete_FS<>();
+        dataScanner.exportData(path, this.filter(this.convert_to_list()));
+    }
+
+    private List<T> filter(ArrayList<RB_Node<T>> nonFilteredData){
+        ArrayList<T> filteredData = new ArrayList<>(0);
+        for(RB_Node<T> node : nonFilteredData)
+            filteredData.add(node.getData());
+        return filteredData;
     }
 }
