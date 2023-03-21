@@ -35,22 +35,5 @@ public class AVL_Demo {
 
         System.out.println(myTree.getSize());
         System.out.println(myTree.getHeight());
-
-        myTree.batchInsert("input");
-        //System.out.println(myTree.getSize());
-        //System.out.println(myTree.search("ngf"));
-        //myTree.traverse();
-        //System.out.println(myTree.getRootNode().data);
-//        System.out.println(myTree.getRootNode().right.left.right.data);
-//       System.out.println(myTree.getSize());
-        //System.out.println(myTree.getHeight());
-
-        myTree.traverse();
-
-
-        myTree.batchDelete("input");
-        myTree.traverse();
-        System.out.println(myTree.getSize());
-        System.out.println(myTree.getHeight());
     }
 }
