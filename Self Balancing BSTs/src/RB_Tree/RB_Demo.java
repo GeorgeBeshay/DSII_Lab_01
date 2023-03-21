@@ -6,8 +6,16 @@ import java.util.*;
 
 public class RB_Demo {
     public static void main(String[] args) {
-        RB_Demo myDemo = new RB_Demo();
-        myDemo.testing();
+        int[] arr = {150, 100, 200, 50, 120, 130, 110};
+        RB_Tree<Integer> tree = new RB_Tree<Integer>();
+        for (int j : arr) tree.insert(j);
+        tree.delete(50);
+        List<RB_Node<Integer>> nodes = tree.convert_to_list();
+        System.out.println("Root is :" + tree.getRoot().getData());
+        for(RB_Node<Integer> node : nodes)
+            System.out.println(node.getData() + " isRed: " + node.isRed());
+//        RB_Demo myDemo = new RB_Demo();
+//        myDemo.testing();
 //        int[] arr = {5, 10, 15, 3};
 //        RB_Tree<Integer> tree = new RB_Tree<Integer>();
 //        for(int i = 0 ; i < 4 ; i++)
@@ -38,7 +46,6 @@ public class RB_Demo {
     public void testing(){
         Super_Tree<String> myTree = new RB_Tree<String>();
         myTree.batchInsert("generated_words");
-        myTree.traverse();
         myTree.export("output");
     }
 }
