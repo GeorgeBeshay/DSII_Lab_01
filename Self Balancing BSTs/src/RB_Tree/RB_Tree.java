@@ -138,6 +138,9 @@ public class RB_Tree<T extends Comparable<T>> implements Super_Tree<T> {
             return null;
         }
         RB_Node<T> parent = node.getParent();
+        boolean nodeNowIs = false;
+        if(parent != null)
+            nodeNowIs = node.isLeftChild();
         if(data.compareTo(node.getData()) < 0) {
             node.setLeftChild(delete(data, node.getLeftChild()));
         }
@@ -145,22 +148,23 @@ public class RB_Tree<T extends Comparable<T>> implements Super_Tree<T> {
             node.setRightChild(delete(data, node.getRightChild()));
         }
         else {
-            this.size--;
             if(node.getLeftChild() == null && node.getRightChild() == null){
                 handleDelete(node, node.getRightChild());
+                this.size--;
                 return node.getRightChild();
             }
             if(node.getLeftChild() == null) {
                 node.getRightChild().setParent(node.getParent());
                 handleDelete(node, node.getRightChild());
+                this.size--;
                 return node.getRightChild();
             }
             else if(node.getRightChild() == null) {
                 node.getLeftChild().setParent(node.getParent());
                 handleDelete(node, node.getLeftChild());
+                this.size--;
                 return node.getLeftChild();
             }
-
             node.setData(getMax_recursion(node.getLeftChild()));
             node.setLeftChild(delete(node.getData(), node.getLeftChild()));
         }
@@ -168,7 +172,7 @@ public class RB_Tree<T extends Comparable<T>> implements Super_Tree<T> {
             return root;
         }
         else {
-            if(node.isLeftChild()){
+            if(nodeNowIs){
                 node = parent.getLeftChild();
             }
             else {
@@ -186,8 +190,10 @@ public class RB_Tree<T extends Comparable<T>> implements Super_Tree<T> {
             }
         }
         else {
-            RB_Node<T> sibling = (toBeDeleted.isLeftChild()? toBeDeleted.getParent().getRightChild(): toBeDeleted.getParent().getLeftChild());
-            handleDoubleBlack(toBeDeleted, sibling);
+            if(toBeDeleted.getParent() != null) {
+                RB_Node<T> sibling = (toBeDeleted.isLeftChild() ? toBeDeleted.getParent().getRightChild() : toBeDeleted.getParent().getLeftChild());
+                handleDoubleBlack(toBeDeleted, sibling);
+            }
         }
         root.setRed(false);
     }
@@ -217,11 +223,11 @@ public class RB_Tree<T extends Comparable<T>> implements Super_Tree<T> {
                 }
                 else {
                     // RL
+                    sibling.flipColor();
+                    if(sibling.getLeftChild() != null){
+                        sibling.getLeftChild().flipColor();
+                    }
                    rightRotate(sibling);
-                   sibling.flipColor();
-                   if(sibling.getRightChild() != null){
-                       sibling.getRightChild().flipColor();
-                   }
                    sibling = sibling.getParent();
                    handleRotationDeleteRecoloring(sibling.getParent(), sibling, sibling.getRightChild(), sibling.getLeftChild());
                    leftRotate(sibling.getParent());
@@ -235,11 +241,11 @@ public class RB_Tree<T extends Comparable<T>> implements Super_Tree<T> {
                     rightRotate(sibling.getParent());
                 } else {
                     // LR
-                    leftRotate(sibling);
                     sibling.flipColor();
-                    if(sibling.getLeftChild() != null){
-                        sibling.getLeftChild().flipColor();
+                    if(sibling.getRightChild() != null){
+                        sibling.getRightChild().flipColor();
                     }
+                    leftRotate(sibling);
                     sibling = sibling.getParent();
                     handleRotationDeleteRecoloring(sibling.getParent(), sibling, sibling.getLeftChild(), sibling.getRightChild());
                     rightRotate(sibling.getParent());
@@ -355,8 +361,10 @@ public class RB_Tree<T extends Comparable<T>> implements Super_Tree<T> {
         File_Scanner_IF<T> dataScanner = new Concrete_FS<>();
         List<T> dataToInsert = dataScanner.importData(filePath);
         long tempSize = this.size;
-        for(T data : dataToInsert)
+        for(T data : dataToInsert) {
             this.insert(data);
+//            this.showNodeData();
+        }
         return this.size - tempSize;
     }
 
@@ -365,9 +373,11 @@ public class RB_Tree<T extends Comparable<T>> implements Super_Tree<T> {
         File_Scanner_IF<T> dataScanner = new Concrete_FS<>();
         List<T> dataToDelete = dataScanner.importData(filePath);
         long tempSize = this.size;
-        for(T data : dataToDelete)
+        for(T data : dataToDelete) {
             this.delete(data);
-        return this.size - tempSize;
+//            this.showNodeData();
+        }
+        return tempSize - this.size;
     }
 
     @Override
@@ -381,5 +391,13 @@ public class RB_Tree<T extends Comparable<T>> implements Super_Tree<T> {
         for(RB_Node<T> node : nonFilteredData)
             filteredData.add(node.getData());
         return filteredData;
+    }
+
+    private void showNodeData(){
+        System.out.println("Root is: " + this.root.getData());
+        ArrayList<RB_Node<T>> nodes = this.convert_to_list();
+        for(RB_Node<T> node : nodes)
+            System.out.println(node.getData() + ", Red: " +node.isRed());
+        System.out.println();
     }
 }

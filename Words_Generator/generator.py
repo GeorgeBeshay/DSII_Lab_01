@@ -40,11 +40,8 @@ def check(number_of_words, max_word_len):
 
 
 def run():
-<<<<<<< Updated upstream
-=======
-    # os.system('clear') # for ubuntu LEAVE IT
->>>>>>> Stashed changes
-    os.system('cls')
+    os.system('clear') # for ubuntu LEAVE IT
+    # os.system('cls')
     print('\t\t\t------ Words Random Generator ------\n')
     print('Enter number of words to be generated, and the maximum length for a word separated by a space:')
     number_of_words, max_word_len = map(int, input().split(' '))

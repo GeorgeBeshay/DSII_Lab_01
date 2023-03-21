@@ -6,6 +6,7 @@ public class RB_Node<T extends Comparable<T>> {
     private RB_Node<T> rightChild;
     private RB_Node<T> leftChild;
     private boolean isRed;
+
     public RB_Node(T data){
         this.data = data;
         this.parent = null;
@@ -13,10 +14,10 @@ public class RB_Node<T extends Comparable<T>> {
         this.leftChild = null;
         this.isRed = true;
     }
+
     public T getData() {
         return data;
     }
-
     public void setData(T data) {
         this.data = data;
     }
@@ -44,11 +45,9 @@ public class RB_Node<T extends Comparable<T>> {
     public boolean isLeftChild(){
         return (this.parent.getLeftChild() == this);
     }
-
     public RB_Node<T> getParent() {
         return parent;
     }
-
     public void setParent(RB_Node<T> parent) {
         this.parent = parent;
     }
