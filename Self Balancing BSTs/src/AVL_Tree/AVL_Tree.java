@@ -97,8 +97,6 @@ public class AVL_Tree<T extends Comparable<T>>  implements Super_Tree<T> {
         }
     }
 
-
-
     public AVL_Node getRootNode() { return root; }
     public void traverse() {
         traverseInOrder(root);
@@ -149,26 +147,6 @@ public class AVL_Tree<T extends Comparable<T>>  implements Super_Tree<T> {
         return doSuitableRotation(root);
     }
 
-    /*private AVL_Node<T> insert(T data, AVL_Node<T>node) {
-        if(node == null) {
-            size++;
-            return new AVL_Node<T>(data);
-        }
-        if(data.compareTo(node.data) < 0) {               // go left
-            node.left = insert(data, node.left);
-        }
-        else if(data.compareTo(node.data) > 0) {     // go right
-            node.right = insert(data, node.right);
-        }
-        else {
-            return null;
-        }
-        updateHeight(node);
-        updateBalanceFactor(node);
-        return doSuitableRotation(node);
-    }*/
-
-
     private AVL_Node<T> delete(T data , AVL_Node<T> root) {
         if(root == null) {
             System.out.println(data + " does not exist in the tree");
@@ -179,12 +157,17 @@ public class AVL_Tree<T extends Comparable<T>>  implements Super_Tree<T> {
         else if (data.compareTo(root.data) > 0)     // go right
             root.right = delete(data, root.right);
         else {                                          // it's the exact node
-            size--;
-            if (root.left == null)              // Non or Single child
+            // Non or Single child
+            if (root.left == null) {
+                size--;
                 return root.right;
-            else if(root.right == null )
+            }
+            else if(root.right == null ) {
+                size --;
                 return root.left;
-            root.data = getMax(root.left);      // two children
+            }
+            // two children
+            root.data = getMax(root.left);
             root.left = delete(root.data , root.left);
         }
         updateHeight(root);
