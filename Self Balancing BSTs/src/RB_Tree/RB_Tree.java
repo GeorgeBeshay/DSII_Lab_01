@@ -137,6 +137,7 @@ public class RB_Tree<T extends Comparable<T>> implements Super_Tree<T> {
         if(node == null) {
             return null;
         }
+        RB_Node<T> parent = node.getParent();
         if(data.compareTo(node.getData()) < 0) {
             node.setLeftChild(delete(data, node.getLeftChild()));
         }
@@ -162,6 +163,17 @@ public class RB_Tree<T extends Comparable<T>> implements Super_Tree<T> {
 
             node.setData(getMax_recursion(node.getLeftChild()));
             node.setLeftChild(delete(node.getData(), node.getLeftChild()));
+        }
+        if(parent == null){
+            return root;
+        }
+        else {
+            if(node.isLeftChild()){
+                node = parent.getLeftChild();
+            }
+            else {
+                node = parent.getRightChild();
+            }
         }
         return node;
     }
