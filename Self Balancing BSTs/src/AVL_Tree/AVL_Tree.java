@@ -4,6 +4,7 @@ import Abstractions.Super_Tree;
 import RB_Tree.RB_Node;
 import RB_Tree.Tree;
 import Services.Concrete_FS;
+import Services.File_Scanner_IF;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,8 +53,8 @@ public class AVL_Tree<T extends Comparable<T>>  implements Super_Tree<T> {
     @Override
     public long batchInsert(String fileName) {
         int counter = 0;
-        fileName += ".txt";
-        Concrete_FS concrete = new Concrete_FS();
+        //fileName += ".txt";
+        Concrete_FS<T> concrete = new Concrete_FS();
         List<T> data = concrete.importData(fileName);
         for(T item : data)
             if(insert(item))
@@ -66,8 +67,8 @@ public class AVL_Tree<T extends Comparable<T>>  implements Super_Tree<T> {
     @Override
     public long batchDelete(String fileName) {
         int counter = 0;
-        fileName += ".txt";
-        Concrete_FS concrete = new Concrete_FS();
+        //fileName += ".txt";
+        Concrete_FS<T> concrete = new Concrete_FS();
         List<T> data = concrete.importData(fileName);
         //System.out.println(delete(data.size()));
         for(T item : data) {
@@ -81,7 +82,19 @@ public class AVL_Tree<T extends Comparable<T>>  implements Super_Tree<T> {
 
     @Override
     public void export(String filePath) {
+        List<T> myList = new ArrayList<>();
+        traverseInOrder(root, myList);
+        System.out.println(myList.size());
+        File_Scanner_IF<T> dataScanner = new Concrete_FS<>();
+        dataScanner.exportData(filePath, myList);
+    }
 
+    private void traverseInOrder(AVL_Node<T> node, List<T> myList) {
+        if(node != null) {
+            traverseInOrder(node.left, myList);
+            myList.add(node.data);
+            traverseInOrder(node.right, myList);
+        }
     }
 
     public AVL_Node getRootNode() { return root; }
@@ -100,8 +113,6 @@ public class AVL_Tree<T extends Comparable<T>>  implements Super_Tree<T> {
             traverseInOrder(node.right);
         }
     }
-
-
     private AVL_Node<T> insert(T data, AVL_Node<T> root) {
         if(root == null) {
             size++;
@@ -134,26 +145,6 @@ public class AVL_Tree<T extends Comparable<T>>  implements Super_Tree<T> {
         updateHeight(root);
         return doSuitableRotation(root);
     }
-
-    /*private AVL_Node<T> insert(T data, AVL_Node<T>node) {
-        if(node == null) {
-            size++;
-            return new AVL_Node<T>(data);
-        }
-        if(data.compareTo(node.data) < 0) {               // go left
-            node.left = insert(data, node.left);
-        }
-        else if(data.compareTo(node.data) > 0) {     // go right
-            node.right = insert(data, node.right);
-        }
-        else {
-            return null;
-        }
-        updateHeight(node);
-        updateBalanceFactor(node);
-        return doSuitableRotation(node);
-    }*/
-
 
     private AVL_Node<T> delete(T data , AVL_Node<T> root) {
         if(root == null) {
@@ -226,7 +217,6 @@ public class AVL_Tree<T extends Comparable<T>>  implements Super_Tree<T> {
         }
         return node;
     }
-
     private AVL_Node<T> rightRotation(AVL_Node<T> node) {
         AVL_Node<T> middleNode = node.left;
         AVL_Node<T> CenterNode = middleNode.right;

@@ -15,7 +15,7 @@ public class Concrete_FS <T> implements File_Scanner_IF<T>{
                 String word = sc.nextLine();
                 data.add((T)word);
             }
-            System.out.println("Data was imported successfully.");
+            //System.out.println("Data was imported successfully.");
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }
