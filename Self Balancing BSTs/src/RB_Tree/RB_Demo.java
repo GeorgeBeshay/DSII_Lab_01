@@ -1,9 +1,5 @@
 package RB_Tree;
 
-import Abstractions.Super_Tree;
-
-import java.util.*;
-
 public class RB_Demo {
     public static void main(String[] args) {
 //        int[] arr = {150, 100, 200, 50, 120, 130, 110};
@@ -17,7 +13,7 @@ public class RB_Demo {
 
         RB_Demo myDemo = new RB_Demo();
         myDemo.testing();
-
+//        myDemo.testing_2();
 //        int[] arr = {5, 10, 15, 3};
 //        RB_Tree<Integer> tree = new RB_Tree<Integer>();
 //        for(int i = 0 ; i < 4 ; i++)
@@ -46,11 +42,28 @@ public class RB_Demo {
     }
 
     public void testing(){
-        Super_Tree<String> myTree = new RB_Tree<String>();
+        RB_Tree<String> myTree = new RB_Tree<String>();
 //        System.out.println(myTree.insert("ab"));
 //        System.out.println(myTree.delete("ab"));
         System.out.println(myTree.batchInsert("generated_words"));
-        System.out.println(myTree.batchDelete("dataToDelete"));
-        myTree.export("output");
+        System.out.println(myTree.batchDelete("generated_words"));
+//        System.out.println(myTree.batchDelete("dataToDelete"));
+//        System.out.println(myTree.batchDelete("dataToDelete"));
+//        myTree.export("output");
+        myTree.validateTree();
+    }
+
+    public void testing_2(){
+        RB_Tree<Integer> myTree = new RB_Tree<Integer>();
+        System.out.println(myTree.insert(1));
+        System.out.println(myTree.insert(2));
+        System.out.println(myTree.insert(0));
+        System.out.println(myTree.insert(100));
+        System.out.println(myTree.insert(50));
+        System.out.println(myTree.insert(23));
+        System.out.println(myTree.insert(5));
+        System.out.println(myTree.insert(200));
+        System.out.println(myTree.insert(189));
+        myTree.validateTree();
     }
 }
