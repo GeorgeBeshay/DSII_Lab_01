@@ -132,7 +132,6 @@ public class AVL_Tree<T extends Comparable<T>>  implements Super_Tree<T> {
             return root;
         }
         updateHeight(root);
-        updateBalanceFactor(root);
         return doSuitableRotation(root);
     }
 
@@ -166,16 +165,18 @@ public class AVL_Tree<T extends Comparable<T>>  implements Super_Tree<T> {
         else if (data.compareTo(root.data) > 0)     // go right
             root.right = delete(data, root.right);
         else {                                          // it's the exact node
-            size--;
-            if (root.left == null)              // Non or Single child
+            if (root.left == null) {              // Non or Single child
+               size--;
                 return root.right;
-            else if(root.right == null )
+            }
+            else if(root.right == null ) {
+                size--;
                 return root.left;
+            }
             root.data = getMax(root.left);      // two children
             root.left = delete(root.data , root.left);
         }
         updateHeight(root);
-        updateBalanceFactor(root);
         return doSuitableRotation(root);
     }
 
@@ -210,12 +211,15 @@ public class AVL_Tree<T extends Comparable<T>>  implements Super_Tree<T> {
     }
 
     private AVL_Node<T> doSuitableRotation(AVL_Node node) {
+        updateBalanceFactor(node);
         if(node.balanceFactor < -1) {
+            updateBalanceFactor(node.right);
             if(node.right.balanceFactor > 0)
                 node.right = rightRotation(node.right);
             return leftRotation(node);
         }
         else if(node.balanceFactor > 1) {
+            updateBalanceFactor(node.left);
             if(node.left.balanceFactor < 0)
                 node.left = leftRotation(node.left);
             return rightRotation(node);
