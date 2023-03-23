@@ -30,12 +30,13 @@ def export_to_file(toBeExported: list, outputPath = "generated_words"):
 
 
 def check(number_of_words, max_word_len):
-    if number_of_words > pow(10, 5):
-        print('Numer Of Words limit is 10^5')
-        number_of_words = pow(10, 5)
-    if max_word_len > pow(10, 5):
-        print('Max word length = 10^5')
-        max_word_len = pow(10, 5)
+    maxPow = 6
+    if number_of_words > pow(10, maxPow):
+        print(f'Numer Of Words limit is 10^{maxPow}')
+        number_of_words = pow(10, maxPow)
+    if max_word_len > pow(10, maxPow):
+        print(f'Max word length = 10^{maxPow}')
+        max_word_len = pow(10, maxPow)
     return number_of_words, max_word_len
 
 

@@ -1,0 +1,106 @@
+@Test
+public void random_testcase_0(){
+// Random testcase generated using python
+RB_Tree<Integer> tree = new RB_Tree<Integer>();
+tree.insert(-742431153);
+tree.insert(956644460);
+tree.insert(-581925975);
+tree.insert(-953999979);
+tree.insert(-416058305);
+tree.insert(-296571826);
+tree.insert(437693691);
+tree.insert(-381597130);
+tree.insert(186295430);
+tree.insert(-158555194);
+Integer[] data = {-953999979, -742431153, -581925975, -416058305, -381597130, -296571826, -158555194, 186295430, 437693691, 956644460,  };
+assertEquals(tree.filter(tree.convert_to_list()), Arrays.asList(data));
+assertTrue(tree.validateTree());
+assertTrue(tree.getHeight() <= 2 * tree.getBlackHeight());
+assertEquals(tree.getSize(), 10);
+}
+
+@Test
+public void random_testcase_1(){
+// Random testcase generated using python
+RB_Tree<Integer> tree = new RB_Tree<Integer>();
+tree.insert(-953999979);
+tree.insert(-742431153);
+tree.insert(-581925975);
+tree.insert(-416058305);
+tree.insert(-381597130);
+tree.insert(-296571826);
+tree.insert(-158555194);
+tree.insert(186295430);
+tree.insert(437693691);
+tree.insert(956644460);
+Integer[] data = {-953999979, -742431153, -581925975, -416058305, -381597130, -296571826, -158555194, 186295430, 437693691, 956644460,  };
+assertEquals(tree.filter(tree.convert_to_list()), Arrays.asList(data));
+assertTrue(tree.validateTree());
+assertTrue(tree.getHeight() <= 2 * tree.getBlackHeight());
+assertEquals(tree.getSize(), 10);
+}
+
+@Test
+public void random_testcase_2(){
+// Random testcase generated using python
+RB_Tree<Integer> tree = new RB_Tree<Integer>();
+tree.insert(-953999979);
+tree.insert(-742431153);
+tree.insert(-581925975);
+tree.insert(-416058305);
+tree.insert(-381597130);
+tree.insert(-296571826);
+tree.insert(-158555194);
+tree.insert(186295430);
+tree.insert(437693691);
+tree.insert(956644460);
+Integer[] data = {-953999979, -742431153, -581925975, -416058305, -381597130, -296571826, -158555194, 186295430, 437693691, 956644460,  };
+assertEquals(tree.filter(tree.convert_to_list()), Arrays.asList(data));
+assertTrue(tree.validateTree());
+assertTrue(tree.getHeight() <= 2 * tree.getBlackHeight());
+assertEquals(tree.getSize(), 10);
+}
+
+@Test
+public void random_testcase_3(){
+// Random testcase generated using python
+RB_Tree<Integer> tree = new RB_Tree<Integer>();
+tree.insert(-953999979);
+tree.insert(-742431153);
+tree.insert(-581925975);
+tree.insert(-416058305);
+tree.insert(-381597130);
+tree.insert(-296571826);
+tree.insert(-158555194);
+tree.insert(186295430);
+tree.insert(437693691);
+tree.insert(956644460);
+Integer[] data = {-953999979, -742431153, -581925975, -416058305, -381597130, -296571826, -158555194, 186295430, 437693691, 956644460,  };
+assertEquals(tree.filter(tree.convert_to_list()), Arrays.asList(data));
+assertTrue(tree.validateTree());
+assertTrue(tree.getHeight() <= 2 * tree.getBlackHeight());
+assertEquals(tree.getSize(), 10);
+}
+
+@Test
+public void random_testcase_4(){
+// Random testcase generated using python
+RB_Tree<Integer> tree = new RB_Tree<Integer>();
+tree.insert(-953999979);
+tree.insert(-742431153);
+tree.insert(-581925975);
+tree.insert(-416058305);
+tree.insert(-381597130);
+tree.insert(-296571826);
+tree.insert(-158555194);
+tree.insert(186295430);
+tree.insert(437693691);
+tree.insert(956644460);
+Integer[] data = {-953999979, -742431153, -581925975, -416058305, -381597130, -296571826, -158555194, 186295430, 437693691, 956644460,  };
+assertEquals(tree.filter(tree.convert_to_list()), Arrays.asList(data));
+assertTrue(tree.validateTree());
+assertTrue(tree.getHeight() <= 2 * tree.getBlackHeight());
+assertEquals(tree.getSize(), 10);
+}
+
+
