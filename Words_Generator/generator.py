@@ -21,9 +21,9 @@ def generate_random_words(numberOfWords, maxLenOfWord):
     return list(generated_words)
 
 
-def export_to_file(toBeExported: list, outputPath = "/IO/generated_words"):
+def export_to_file(toBeExported: list, outputPath = "generated_words"):
     # print(os.getcwd()) # check your current working directory
-    outputFile = open(os.getcwd() + outputPath, "w")
+    outputFile = open(os.getcwd() + "/IO/" + outputPath, "w")
     for word in toBeExported:
         outputFile.write(word + '\n')
     outputFile.close()
@@ -41,13 +41,16 @@ def check(number_of_words, max_word_len):
 
 def run():
     # os.system('clear') # for ubuntu LEAVE IT
-    os.system('cls')
+    # os.system('cls')
     print('\t\t\t------ Words Random Generator ------\n')
-    print('Enter number of words to be generated, and the maximum length for a word separated by a space:')
-    number_of_words, max_word_len = map(int, input().split(' '))
+    print('Enter number of words to be generated, the maximum length for a word separated by a space, '
+          'and the output file name:')
+    number_of_words, max_word_len, file_name = input().split(' ')
+    number_of_words, max_word_len = map(int, [number_of_words, max_word_len])
     number_of_words, max_word_len = check(number_of_words, max_word_len)
-    print(f'User requested to generate {number_of_words} words with a maximum length of {max_word_len} characters.')
-    export_to_file(generate_random_words(number_of_words, max_word_len))
+    print(f'User requested to generate {number_of_words} words with a maximum length of {max_word_len} characters, '
+          f'and to export to "{file_name}"')
+    export_to_file(generate_random_words(number_of_words, max_word_len), file_name)
     print('Generated successfully, file can be found in the IO directory.')
 
 
