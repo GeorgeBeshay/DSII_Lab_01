@@ -3,13 +3,12 @@ package AVL_Tree;
 import Abstractions.Super_Tree;
 import Services.Concrete_FS;
 import Services.File_Scanner_IF;
-
 import java.util.ArrayList;
 import java.util.List;
 
 public class AVL_Tree<T extends Comparable<T>>  implements Super_Tree<T> {
     private AVL_Node<T> root;
-    private int size;
+    private long size;
 
     public AVL_Tree() {
         root = null;
@@ -17,27 +16,21 @@ public class AVL_Tree<T extends Comparable<T>>  implements Super_Tree<T> {
     }
     @Override
     public boolean insert (T data) {
-        int lastSize = size;
+        long lastSize = size;
         root = insert(data , root);
-        if(lastSize != size)
-            return true;
-        return false;
+        return lastSize != size;
     }
 
     @Override
     public boolean delete(T data) {
-        int lastSize = size;
+        long lastSize = size;
         root = delete(data , root);
-        if(lastSize != size)
-            return true;
-        return false;
+        return lastSize != size;
     }
 
     @Override
     public boolean search(T data) {
-        if(search(data, root) != null)
-            return true;
-        return false;
+        return search(data, root);
     }
 
     @Override
@@ -52,7 +45,7 @@ public class AVL_Tree<T extends Comparable<T>>  implements Super_Tree<T> {
     public long batchInsert(String fileName) {
         int counter = 0;
         //fileName += ".txt";
-        Concrete_FS<T> concrete = new Concrete_FS();
+        Concrete_FS<T> concrete = new Concrete_FS<>();
         List<T> data = concrete.importData(fileName);
         for(T item : data)
             if(insert(item))
@@ -66,7 +59,7 @@ public class AVL_Tree<T extends Comparable<T>>  implements Super_Tree<T> {
     public long batchDelete(String fileName) {
         int counter = 0;
         //fileName += ".txt";
-        Concrete_FS<T> concrete = new Concrete_FS();
+        Concrete_FS<T> concrete = new Concrete_FS<>();
         List<T> data = concrete.importData(fileName);
         //System.out.println(delete(data.size()));
         for(T item : data) {
@@ -95,7 +88,7 @@ public class AVL_Tree<T extends Comparable<T>>  implements Super_Tree<T> {
         }
     }
 
-    public AVL_Node getRootNode() { return root; }
+    public AVL_Node<T> getRootNode() { return root; }
     public void traverse() {
         traverseInOrder(root);
         System.out.println();
@@ -120,7 +113,7 @@ public class AVL_Tree<T extends Comparable<T>>  implements Super_Tree<T> {
             if(root.right != null)
                 root.right = insert(data, root.right);
             else {
-                AVL_Node<T> newNode= new AVL_Node(data);
+                AVL_Node<T> newNode= new AVL_Node<>(data);
                 newNode.parent = root;
                 root.right = newNode;
                 size++;
@@ -130,7 +123,7 @@ public class AVL_Tree<T extends Comparable<T>>  implements Super_Tree<T> {
             if(root.left != null)
                 root.left = insert(data, root.left);
             else {
-                AVL_Node<T> newNode= new AVL_Node(data);
+                AVL_Node<T> newNode= new AVL_Node<>(data);
                 newNode.parent = root;
                 root.left = newNode;
                 size++;
@@ -143,7 +136,6 @@ public class AVL_Tree<T extends Comparable<T>>  implements Super_Tree<T> {
         updateHeight(root);
         return doSuitableRotation(root);
     }
-
     private AVL_Node<T> delete(T data , AVL_Node<T> root) {
         if(root == null) {
             System.out.println(data + " does not exist in the tree");
@@ -155,7 +147,7 @@ public class AVL_Tree<T extends Comparable<T>>  implements Super_Tree<T> {
             root.right = delete(data, root.right);
         else {                                          // it's the exact node
             if (root.left == null) {              // Non or Single child
-               size--;
+                size--;
                 return root.right;
             }
             else if(root.right == null ) {
@@ -170,14 +162,14 @@ public class AVL_Tree<T extends Comparable<T>>  implements Super_Tree<T> {
     }
 
 
-    private AVL_Node<T> search(T data, AVL_Node<T> root) {
+    private boolean search(T data, AVL_Node<T> root) {
         if(root == null) {
-            System.out.println(data + " does not exist in the tree");
-            return null;
+            //System.out.println(data + " does not exist in the tree");
+            return false;
         }
         if(data.compareTo(root.data) < 0) return search(data, root.left);
         else if(data.compareTo(root.data) > 0) return search(data, root.right);
-        else return root;
+        else return true;
     }
 
     private T getMax(AVL_Node<T> predecessor_Node) {
@@ -199,7 +191,7 @@ public class AVL_Tree<T extends Comparable<T>>  implements Super_Tree<T> {
         return getMin(root);
     }
 
-    private AVL_Node<T> doSuitableRotation(AVL_Node node) {
+    private AVL_Node<T> doSuitableRotation(AVL_Node<T> node) {
         updateBalanceFactor(node);
         if(node.balanceFactor < -1) {
             updateBalanceFactor(node.right);

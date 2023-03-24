@@ -14,6 +14,8 @@ public class AVL_RB_Comparison {
     ArrayList<List<Super_Tree<Integer>>> trees;   // avl, rb
     Integer limit;
 
+    public AVL_RB_Comparison(){}
+
     public AVL_RB_Comparison(ArrayList<Integer> sizesToObserve, Integer limit) {
         this.sizesToObserve = sizesToObserve;
         this.data = new ArrayList<>();
@@ -148,6 +150,13 @@ public class AVL_RB_Comparison {
             results.set(i, results.get(i).concat((avlEnd - avlStart) / 1000 + "\t" + (rbEnd - rbStart) / 1000) + "\t" + avlH + "\t" + rbH + "\t");
         }
         return results;
+    }
+
+    public ArrayList<Long> RandomGenerator(int numberOfElements, long limit) {
+        ArrayList<Long> RandomData = new ArrayList<>();
+        Random random = new Random();
+        while(numberOfElements-- > 0) RandomData.add(random.nextLong(limit));
+        return RandomData;
     }
 
 
