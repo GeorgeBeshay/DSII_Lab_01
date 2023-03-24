@@ -41,7 +41,10 @@ we were assigned to implement those self balancing BSTs and build - using them -
 ## Installation
 
 ### Steps to install and run this application on your local machine.
-* "Fill this out .."
+* Download the ZIP file from [here](https://github.com/GeorgeBeshay/DSII_Lab_01/archive/refs/heads/main.zip)
+* Extract it
+* Open the ***Self Balancing BSTs*** directory using your favourite Java IDE.
+* Build the project & run the ***CLI.CLI_Demo*** class
 
 ---
 
