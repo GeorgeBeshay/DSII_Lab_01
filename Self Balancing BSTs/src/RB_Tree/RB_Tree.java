@@ -310,13 +310,12 @@ public class RB_Tree<T extends Comparable<T>> implements Super_Tree<T> {
     private boolean search_recursion(RB_Node<T> node, T data){
         if(node == null)
             return false;
-        if(node.getData().compareTo(data) < 0)
-            search_recursion(node.getLeftChild(), data);
-        else if(node.getData().compareTo(data) > 0)
-            search_recursion(node.getRightChild(), data);
+        if(node.getData().compareTo(data) > 0)
+            return search_recursion(node.getLeftChild(), data);
+        else if(node.getData().compareTo(data) < 0)
+            return search_recursion(node.getRightChild(), data);
         else
             return true;
-        return false;
     }
 
     @Override
