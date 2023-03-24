@@ -1,14 +1,23 @@
 package RB_Tree;
 
-import java.util.ArrayList;
-import java.util.List;
+import Abstractions.Super_Tree;
+import Services.Concrete_FS;
+import Services.File_Scanner_IF;
 
-public class RB_Tree<T extends Comparable<T>> implements Tree<T> {
+import java.util.*;
+
+public class RB_Tree<T extends Comparable<T>> implements Super_Tree<T> {
+
     private RB_Node<T> root;
     private long size;
+    private long height;
+    private long blackHeight;
+
     public RB_Tree(){
         this.root = null;
         this.size = 0;
+        this.height = 0;
+        this.blackHeight = 0;
     }
 
     public RB_Node<T> getRoot() {
@@ -16,13 +25,15 @@ public class RB_Tree<T extends Comparable<T>> implements Tree<T> {
     }
 
     @Override
-    public RB_Tree<T> insert(T data) {
+    public boolean insert(T data) {
         RB_Node<T> nodeToBeInserted = new RB_Node<>(data);
+        long tempSize = this.size;
         root = insert(root, nodeToBeInserted);
         recolorAndRotate(nodeToBeInserted);
-        return this;
+        return (tempSize != this.size);
     }
-    public void recolorAndRotate(RB_Node<T> node){
+
+    private void recolorAndRotate(RB_Node<T> node){
         RB_Node<T> parent = node.getParent();
         if(parent != null && parent != root && parent.isRed()){
             RB_Node<T> grandParent = parent.getParent();
@@ -40,7 +51,8 @@ public class RB_Tree<T extends Comparable<T>> implements Tree<T> {
         }
         root.setRed(false);
     }
-    public void handleLeftSituation(RB_Node<T> node, RB_Node<T> parent, RB_Node<T> grandParent){
+
+    private void handleLeftSituation(RB_Node<T> node, RB_Node<T> parent, RB_Node<T> grandParent){
         if(!node.isLeftChild()){
             leftRotate(parent);
             node.flipColor();
@@ -50,7 +62,8 @@ public class RB_Tree<T extends Comparable<T>> implements Tree<T> {
         rightRotate(grandParent);
 //        recolorAndRotate(!node.isLeftChild() ? node : parent);
     }
-    public void handleRightSituation(RB_Node<T> node, RB_Node<T> parent, RB_Node<T> grandParent){
+
+    private void handleRightSituation(RB_Node<T> node, RB_Node<T> parent, RB_Node<T> grandParent){
         if(node.isLeftChild()){
             rightRotate(parent);
             node.flipColor();
@@ -60,7 +73,8 @@ public class RB_Tree<T extends Comparable<T>> implements Tree<T> {
         leftRotate(grandParent);
 //        recolorAndRotate();
     }
-    public void rightRotate(RB_Node<T> node) {
+
+    private void rightRotate(RB_Node<T> node) {
         RB_Node<T> leftChild = node.getLeftChild();
         node.setLeftChild(leftChild.getRightChild());
         if(leftChild.getRightChild() != null)
@@ -70,7 +84,8 @@ public class RB_Tree<T extends Comparable<T>> implements Tree<T> {
         changeParent(leftChild, node);
         node.setParent(leftChild);
     }
-    public void leftRotate(RB_Node<T> node){
+
+    private void leftRotate(RB_Node<T> node){
         RB_Node<T> rightChild = node.getRightChild();
         node.setRightChild(rightChild.getLeftChild());
         if(node.getRightChild() != null)
@@ -80,7 +95,8 @@ public class RB_Tree<T extends Comparable<T>> implements Tree<T> {
         changeParent(rightChild, node);
         node.setParent(rightChild);
     }
-    public void changeParent(RB_Node<T> node, RB_Node<T> old){
+
+    private void changeParent(RB_Node<T> node, RB_Node<T> old){
         if(old.getParent() != null) {
             if (old.isLeftChild())
                 node.getParent().setLeftChild(node);
@@ -90,13 +106,15 @@ public class RB_Tree<T extends Comparable<T>> implements Tree<T> {
             root = node;
         }
     }
-    public void handleRecoloring(RB_Node<T> parent, RB_Node<T> uncle, RB_Node<T> grandParent){
+
+    private void handleRecoloring(RB_Node<T> parent, RB_Node<T> uncle, RB_Node<T> grandParent){
         uncle.flipColor();
         parent.flipColor();
         grandParent.flipColor();
         recolorAndRotate(grandParent);
     }
-    public RB_Node<T> insert(RB_Node<T> node, RB_Node<T> nodeToBeInserted){
+
+    private RB_Node<T> insert(RB_Node<T> node, RB_Node<T> nodeToBeInserted){
         if(node == null) {
             size++;
             return nodeToBeInserted;
@@ -113,14 +131,20 @@ public class RB_Tree<T extends Comparable<T>> implements Tree<T> {
 
 
     @Override
-    public void delete(T data) {
-        delete(data, root);
+    public boolean delete(T data) {
+        long tempSize = this.size;
+        root = delete(data, root);
+        return tempSize != this.size;
     }
 
-    public RB_Node<T> delete(T data, RB_Node<T> node){
+    private RB_Node<T> delete(T data, RB_Node<T> node){
         if(node == null) {
             return null;
         }
+        RB_Node<T> parent = node.getParent();
+        boolean nodeNowIs = false;
+        if(parent != null)
+            nodeNowIs = node.isLeftChild();
         if(data.compareTo(node.getData()) < 0) {
             node.setLeftChild(delete(data, node.getLeftChild()));
         }
@@ -128,43 +152,57 @@ public class RB_Tree<T extends Comparable<T>> implements Tree<T> {
             node.setRightChild(delete(data, node.getRightChild()));
         }
         else {
-            this.size--;
             if(node.getLeftChild() == null && node.getRightChild() == null){
                 handleDelete(node, node.getRightChild());
+                this.size--;
                 return node.getRightChild();
             }
             if(node.getLeftChild() == null) {
                 node.getRightChild().setParent(node.getParent());
                 handleDelete(node, node.getRightChild());
+                this.size--;
                 return node.getRightChild();
             }
             else if(node.getRightChild() == null) {
                 node.getLeftChild().setParent(node.getParent());
                 handleDelete(node, node.getLeftChild());
+                this.size--;
                 return node.getLeftChild();
             }
-
-            node.setData(getMax(node.getLeftChild()));
+            node.setData(getMax_recursion(node.getLeftChild()));
             node.setLeftChild(delete(node.getData(), node.getLeftChild()));
+        }
+        if(parent == null){
+            return root;
+        }
+        else {
+            if(nodeNowIs){
+                node = parent.getLeftChild();
+            }
+            else {
+                node = parent.getRightChild();
+            }
         }
         return node;
     }
 
 
-    public void handleDelete(RB_Node<T> toBeDeleted, RB_Node<T> child){
+    private void handleDelete(RB_Node<T> toBeDeleted, RB_Node<T> child){
         if(toBeDeleted.isRed() || (child != null && child.isRed())){
             if(child != null){
                 child.setRed(false);
             }
         }
         else {
-            RB_Node<T> sibling = (toBeDeleted.isLeftChild()? toBeDeleted.getParent().getRightChild(): toBeDeleted.getParent().getLeftChild());
-            handleDoubleBlack(toBeDeleted, sibling);
+            if(toBeDeleted.getParent() != null) {
+                RB_Node<T> sibling = (toBeDeleted.isLeftChild() ? toBeDeleted.getParent().getRightChild() : toBeDeleted.getParent().getLeftChild());
+                handleDoubleBlack(toBeDeleted, sibling);
+            }
         }
         root.setRed(false);
     }
 
-    public void handleDoubleBlack(RB_Node<T> node, RB_Node<T> sibling){
+    private void handleDoubleBlack(RB_Node<T> node, RB_Node<T> sibling){
         if(!sibling.isRed() && ((sibling.getLeftChild() == null && sibling.getRightChild() == null) ||
                 (sibling.getLeftChild() != null && !sibling.getLeftChild().isRed() && sibling.getRightChild() != null && !sibling.getRightChild().isRed()) )){
             sibling.setRed(true);
@@ -189,11 +227,11 @@ public class RB_Tree<T extends Comparable<T>> implements Tree<T> {
                 }
                 else {
                     // RL
+                    sibling.flipColor();
+                    if(sibling.getLeftChild() != null){
+                        sibling.getLeftChild().flipColor();
+                    }
                    rightRotate(sibling);
-                   sibling.flipColor();
-                   if(sibling.getRightChild() != null){
-                       sibling.getRightChild().flipColor();
-                   }
                    sibling = sibling.getParent();
                    handleRotationDeleteRecoloring(sibling.getParent(), sibling, sibling.getRightChild(), sibling.getLeftChild());
                    leftRotate(sibling.getParent());
@@ -207,11 +245,11 @@ public class RB_Tree<T extends Comparable<T>> implements Tree<T> {
                     rightRotate(sibling.getParent());
                 } else {
                     // LR
-                    leftRotate(sibling);
                     sibling.flipColor();
-                    if(sibling.getLeftChild() != null){
-                        sibling.getLeftChild().flipColor();
+                    if(sibling.getRightChild() != null){
+                        sibling.getRightChild().flipColor();
                     }
+                    leftRotate(sibling);
                     sibling = sibling.getParent();
                     handleRotationDeleteRecoloring(sibling.getParent(), sibling, sibling.getLeftChild(), sibling.getRightChild());
                     rightRotate(sibling.getParent());
@@ -229,7 +267,7 @@ public class RB_Tree<T extends Comparable<T>> implements Tree<T> {
         }
     }
 
-    public void handleRotationDeleteRecoloring(RB_Node<T> parent, RB_Node<T> sibling, RB_Node<T> redChild, RB_Node<T> alpha){
+    private void handleRotationDeleteRecoloring(RB_Node<T> parent, RB_Node<T> sibling, RB_Node<T> redChild, RB_Node<T> alpha){
         if(!parent.isRed()){
             redChild.setRed(false);
         }
@@ -243,13 +281,20 @@ public class RB_Tree<T extends Comparable<T>> implements Tree<T> {
     }
 
     @Override
-    public ArrayList<RB_Node<T>> traverse() {
-        ArrayList<RB_Node<T>> nodes = new ArrayList<>();
-        traverseInOrder(root, nodes);
-        return nodes;
+    public void traverse(){
+        ArrayList<RB_Node<T>> sortedNodes = this.convert_to_list();
+        for(RB_Node<T> node : sortedNodes)
+            System.out.print(node.getData() + ", ");
+        System.out.println();
     }
 
-    public void traverseInOrder(RB_Node<T> node, ArrayList<RB_Node<T>> nodes){
+    public ArrayList<RB_Node<T>> convert_to_list() {
+        ArrayList<RB_Node<T>> sortedNodes = new ArrayList<>();
+        traverseInOrder(root, sortedNodes);
+        return sortedNodes;
+    }
+
+    private void traverseInOrder(RB_Node<T> node, ArrayList<RB_Node<T>> nodes){
         if(node == null)
             return;
         traverseInOrder(node.getLeftChild(), nodes);
@@ -265,29 +310,38 @@ public class RB_Tree<T extends Comparable<T>> implements Tree<T> {
     private boolean search_recursion(RB_Node<T> node, T data){
         if(node == null)
             return false;
-        if(node.getData().compareTo(data) < 0)
-            search_recursion(node.getLeftChild(), data);
-        else if(node.getData().compareTo(data) > 0)
-            search_recursion(node.getRightChild(), data);
+        if(node.getData().compareTo(data) > 0)
+            return search_recursion(node.getLeftChild(), data);
+        else if(node.getData().compareTo(data) < 0)
+            return search_recursion(node.getRightChild(), data);
         else
             return true;
-        return false;
     }
 
-
-
     @Override
-    public T getMax(RB_Node<T> node) {
-        if(node.getRightChild() != null) {
-            return getMax(node.getRightChild());
-        }
-        return node.getData();
-
+    public T getMax(){
+        return getMax_recursion(this.root);
     }
 
     @Override
     public T getMin() {
-        return null;
+        return getMin_recursion(this.root);
+    }
+
+    private T getMax_recursion(RB_Node<T> node) {
+        if(node == null)
+            return null;
+        if(node.getRightChild() != null)
+            return getMax_recursion(node.getRightChild());
+        return node.getData();
+    }
+
+    private T getMin_recursion(RB_Node<T> node){
+        if(node == null)
+            return null;
+        if(node.getLeftChild() != null)
+            return getMin_recursion(node.getLeftChild());
+        return node.getData();
     }
 
     @Override
@@ -302,6 +356,104 @@ public class RB_Tree<T extends Comparable<T>> implements Tree<T> {
 
     @Override
     public long getHeight() {
-        return 0;
+        return height_rec(root);
+    }
+
+    @Override
+    public long batchInsert(String filePath) {
+        File_Scanner_IF<T> dataScanner = new Concrete_FS<>();
+        List<T> dataToInsert = dataScanner.importData(filePath);
+        long tempSize = this.size;
+        for(T data : dataToInsert) {
+            this.insert(data);
+//            this.showNodeData();
+        }
+        return this.size - tempSize;
+    }
+
+    @Override
+    public long batchDelete(String filePath) {
+        File_Scanner_IF<T> dataScanner = new Concrete_FS<>();
+        List<T> dataToDelete = dataScanner.importData(filePath);
+        long tempSize = this.size;
+        for(T data : dataToDelete) {
+            this.delete(data);
+//            this.showNodeData();
+        }
+        return tempSize - this.size;
+    }
+
+    @Override
+    public void export(String path){
+        File_Scanner_IF<T> dataScanner = new Concrete_FS<>();
+        dataScanner.exportData(path, this.filter(this.convert_to_list()));
+    }
+
+    public List<T> filter(ArrayList<RB_Node<T>> nonFilteredData){
+        ArrayList<T> filteredData = new ArrayList<>(0);
+        for(RB_Node<T> node : nonFilteredData)
+            filteredData.add(node.getData());
+        return filteredData;
+    }
+
+    private void showNodeData(){
+        System.out.println("Root is: " + this.root.getData());
+        ArrayList<RB_Node<T>> nodes = this.convert_to_list();
+        for(RB_Node<T> node : nodes)
+            System.out.println(node.getData() + ", Red: " + node.isRed());
+        System.out.println();
+    }
+
+    public boolean validateTree(){
+        this.blackHeight = this.blackHeight_rec(root);
+        this.height = this.height_rec(root);
+        return validateNodesColors(root);
+    }
+
+    private boolean validateNodesColors(RB_Node<T> node){
+        if(node == null)
+            return true;
+        return (
+                blackHeight_rec(node.getLeftChild()) == blackHeight_rec(node.getRightChild())
+                && validateNodesColors(node.getLeftChild()) && validateNodesColors(node.getRightChild())
+        );
+    }
+
+    private long blackHeight_rec(RB_Node<T> node){
+        if(node == null)
+            return 1;
+        long leftChildBH, rightChildBH;
+        // -------------- Separator --------------
+        if(node.getLeftChild() != null)
+            leftChildBH = blackHeight_rec(node.getLeftChild());
+        else
+            leftChildBH = 1;
+        if(node.getRightChild() != null)
+            rightChildBH = blackHeight_rec(node.getRightChild());
+        else
+            rightChildBH = 1;
+        // -------------- Separator --------------
+        return (Math.max(leftChildBH, rightChildBH) + (node.isRed() ? 0 : 1));
+    }
+
+    private long height_rec(RB_Node<T> node){
+        if(node == null)
+            return 1;
+        long leftChild, rightChild;
+        // -------------- Separator --------------
+        if(node.getLeftChild() != null)
+            leftChild = height_rec(node.getLeftChild());
+        else
+            leftChild = 1;
+        if(node.getRightChild() != null)
+            rightChild = height_rec(node.getRightChild());
+        else
+            rightChild = 1;
+        // -------------- Separator --------------
+        return (Math.max(leftChild, rightChild) + 1);
+    }
+
+    public long getBlackHeight() {
+        return blackHeight;
     }
 }
